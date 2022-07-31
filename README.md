@@ -13,11 +13,13 @@
 <br>
 <br>
 <br>
-
 </center>
+<div style="page-break-after: always; visibility: hidden">
+/pagebreak
+</div>
+
 
 * * *
-<br>
 # Index
 ### 1. Introduce
 ### 2. Code audit
@@ -25,11 +27,16 @@
 ### 4. Exploit
 ### 5. Reference
 <br>
+<div style="page-break-after: always; visibility: hidden">
+/pagebreak
+</div>
 
 * * * 
 
 <br>
+
 # 1. Introduce
+
 <br>
 <br>
 
@@ -40,8 +47,12 @@
 에서 각각 version에 따라 높은 등급을 받은 취약점이다. CVSS2.0에서는 7.2 HIGH score를 받았고, CVSS3.x에서는 7.8 HIGH score를 받았다. 이 vulnerability가 HIGH score를 받은 원인을 분석해 보면 Linux OS PC와 Android device의 약 70%에 영향을 줄 수 있기 때문이다. 
 </p>
 <br>
+<div style="page-break-after: always; visibility: hidden">
+/pagebreak
+</div>
 
 ***
+
 # 2. Code audit
 <br>
 <br>
@@ -50,6 +61,7 @@
 <br>
 <b>security/keys/process_keys.c</b>
 <br>
+
 ```C
  long join_session_keyring (const char *name )
 {
@@ -75,6 +87,8 @@
 			ret =serial ;
 		goto okay ;
 	}
+```
+```
 
 	/* allow the user to join or create a named keyring */
 	mutex_lock (&key_session_mutex );
@@ -120,12 +134,14 @@
 	return ret ;
     }
 ```
+
 <p>
 패치 이후에 바뀐 것은 <span style="color: red">key_put (keyring );</span>이 추가되었다. key_put()의 역할을 알아보기 위해서 /security/keys/key.c에 있는 key_put()을 참조해보면
 </p>
 <br>
 <b>/security/keys/key.c</b>
 <br>
+
 ```C
 /**
  * key_put - Discard a reference to a key.
@@ -135,6 +151,7 @@
  * schedule the cleanup task to come and pull it out of the tree in process
  * context at some later time.
  */
+
 void key_put (struct key *key )
 {
 	if (key ){
@@ -145,27 +162,39 @@ void key_put (struct key *key )
 	}
 }
 ```
+
 <p>
 reference가 끝났을 때 key에 대한 reference를 모두 버리는 역할을 한다. 이 역할이 join_session_keyring에 적용된다면 원래 있던 vulnerability인 count가 reference가 끝나도 끊임없이 increase 하는 문제를 해결 할 수 있다.
 </p>
+
 <img src="./1.png">
+
 <p>
 표시한 부분이 count이며 계속 increase한다.
 이 reference count의 type이 int 이므로 2^32번 참조하면 Integer Overflow가 발생한다.
 </p>
+
 <br>
+<div style="page-break-after: always; visibility: hidden">
+/pagebreak
+</div>
 
 ***
+
 # 3. PoC
 <br>
 <br>
-
 <p>
 reference count가 계속 increse 할수 있는지에 대해서 proof 해보려고 한다.</p>
+
 <b>~$ vim aa.c</b>
+
 <br>
+
 <img src="./2.png">
+
 <br>
+
 <p>
 이 code를 이용하여 reference count가 계속 증가하는지 확인한다. Configuration은 Linux tndud-VirtualBox 3.18.25이고 ubuntu-18.04.6-desktop-amd64.iso에서 구동하고 있다.
 </p>
@@ -186,6 +215,9 @@ reference count가 계속 increse 할수 있는지에 대해서 proof 해보려�
 
 <p>cat /proc/keys의 값을 보여주지 않고 커서만 깜빡거린다. 강제종료 후에 cat /proc/keys의 결과를 확인해보면 reference count가 임의의 값으로 설정되어있는 것을 볼 수 있다.</p>
 <br>
+<div style="page-break-after: always; visibility: hidden">
+/pagebreak
+</div>
 
 * * *
 
@@ -194,8 +226,17 @@ reference count가 계속 increse 할수 있는지에 대해서 proof 해보려�
 <br>
 위의 vulnerability를 이용해서 Exploit Code를 만들어보려고 한다.
 
+<div style="page-break-after: always; visibility: hidden">
+/pagebreak
+</div>
+
 
 *** 
+
 # 5. Reference
+
+<div style="page-break-after: always; visibility: hidden">
+/pagebreak
+</div>
 
 
