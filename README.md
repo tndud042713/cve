@@ -62,7 +62,7 @@
 <b>security/keys/process_keys.c</b>
 <br>
 
-```C
+```C {.line-numbers}
  long join_session_keyring (const char *name )
 {
 	const struct cred *old ;
@@ -88,7 +88,7 @@
 		goto okay ;
 	}
 ```
-```
+```C {.line-numbers}
 
 	/* allow the user to join or create a named keyring */
 	mutex_lock (&key_session_mutex );
@@ -142,7 +142,7 @@
 <b>/security/keys/key.c</b>
 <br>
 
-```C
+```C {.line-numbers}
 /**
  * key_put - Discard a reference to a key.
  * @key: The key to discard a reference from.
@@ -238,5 +238,11 @@ reference count가 계속 increse 할수 있는지에 대해서 proof 해보려�
 <div style="page-break-after: always; visibility: hidden">
 /pagebreak
 </div>
+
+<!--
+0801 학습해야 할 내용
+우혁이 취약점에서 나온 단어들
+namespace, user_namespace, system call, mmap() function, ring, buffer, system call, socket() function, heap frame, heap block
+ -->
 
 
