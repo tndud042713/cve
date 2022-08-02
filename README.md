@@ -239,14 +239,6 @@ reference count가 계속 increse 할수 있는지에 대해서 proof 해보려�
 /pagebreak
 </div>
 
-<!--
-0801 학습해야 할 내용
-우혁이 취약점에서 나온 단어들
-namespace, user_namespace, system call, mmap() function, ring, buffer, system call, socket() function, heap frame, heap block, atomic_t
-atomic_t는 리소스 카운터 용도로 사용된다.
 
-#define 매크로함수
-unsigned의 필요성??
- -->
 
 
